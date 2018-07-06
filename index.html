@@ -55,7 +55,7 @@
     </section>
 
     <script>
-      if ('serviceworker' in navigator) {
+      if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('cache.js', { scope: '/' })
         })
