@@ -25,6 +25,11 @@
     <meta name="google-site-verification" content="Smqy8g6tSwdId5N51gTeesHkl1hTvZoQXqV6paZfD84" />
 
     <style>
+      html, body {
+        height: 100%;
+        width: 100%;
+      }
+
       html {
         color: silver;
         font-family: "Lucida Console", Monaco, monospace;
@@ -35,15 +40,27 @@
       }
 
       section header {
-        height: 100%;
+        height: 90%;
         width: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
       }
 
-      h1 {
+      section header h1 {
         font-size: 7.1vw;
+      }
+
+      section footer {
+        height: 10%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      section footer p {
+        font-size: 1.7vh;
       }
     </style>
   </head>
@@ -52,6 +69,11 @@
       <header>
         <h1>Inversive Space</h1>
       </header>
+      <footer>
+        <p>
+          <a>Gianluca Casati</a>
+        </p>
+      </footer>
     </section>
 
     <script>
