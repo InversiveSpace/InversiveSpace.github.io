@@ -4,8 +4,8 @@
   "description": "is Gianluca Casati's visiting card",
   "display": "fullscreen",
   "orientation": "portrait",
-  "background_color": "#333",
-  "theme_color": "#333",
+  "background_color": "#000000",
+  "theme_color": "#333333",
   "start_url": "/?homescreen=1",
   "icons": [
     {
