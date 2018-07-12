@@ -1,11 +1,20 @@
-const CACHE_NAME = 'inversive.space-v1'
+const CACHE_NAME = 'inversive.space-v1.0'
 
 const CACHED_URLS = [
   '/',
   '/animation.js',
   '/cache.js',
+  '/favicon.ico',
   '/manifest.json',
-  '/logo/512x512.png'
+  '/media/logo/36x36.png',
+  '/media/logo/48x48.png',
+  '/media/logo/72x72.png',
+  '/media/logo/96x96.png',
+  '/media/logo/144x144.png',
+  '/media/logo/192x192.png',
+  '/media/logo/256x256.png',
+  '/media/logo/384x384.png',
+  '/media/logo/512x512.png'
 ]
 
 self.addEventListener('install', event => {
