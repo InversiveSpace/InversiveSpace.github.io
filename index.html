@@ -103,22 +103,35 @@
         })
       }
 
-      document.addEventListener('DOMContentLoaded', function () {
-        var install
+      var deferredInstall
 
+      window.addEventListener('beforeinstallprompt', function (event) {
+        event.preventDefault()
+
+        deferredInstall = event
+        
         var installButton = document.getElementById('install')
+        installButton.classList.remove('hidden')
 
-        window.addEventListener('beforeinstallprompt', function (event) {
-          event.preventDefault()
+        installButton.addEventListener('click', function () {
+          if (deferredInstall) {
+            deferredInstall.prompt()
+            
+            deferredInstall.userChoice.then(function (choiceResult) {
+              if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted')
 
-          install = event
-
-          installButton.addEventListener('click', function () {
-            install.prompt()
-          })
-
-          installButton.classList.remove('hidden')
+                deferredInstall = null
+              } else {
+                console.log('User dismissed')
+              }
+            })
+          }
         })
+      })
+      
+      window.addEventListener('appinstalled', function (event) {
+        console.log('installed')
       })
     </script>
   </body>
