@@ -26,6 +26,12 @@
       * {
         margin: 0;
         padding: 0;
+        cursor: default;
+      }
+
+      *::selection {
+        background: hotpink;
+        color: deeppink;
       }
 
       html, body {
@@ -76,17 +82,15 @@
       }
 
       a {
-        color: silver;
-      }
-
-      a:hover {
         background-color: black;
+        color: silver;
+        text-decoration: none;
       }
 
       .hidden { display: none; }
 
       .icon svg {
-        width: 7.1vh;
+        width: 7.1vmax;
       }
     </style>
   </head>
@@ -108,7 +112,7 @@
 
       <footer>
         <p>
-          di <a href="https://g14n.info">Gianluca Casati</a>&nbsp;&middot;&nbsp;P.IVA 02551170992
+          di <a id="mywebsite">Gianluca Casati</a>&nbsp;&middot;&nbsp;P.IVA 02551170992
         </p>
       </footer>
     </section>
@@ -149,6 +153,18 @@
 
       window.addEventListener('appinstalled', function (event) {
         console.log('installed')
+      })
+
+      window.addEventListener('DOMContentLoaded', function () {
+        var mywebsite = document.getElementById('mywebsite')
+
+        mywebsite.addEventListener('click', function (event) {
+          event.preventDefault()
+
+          if (navigator.onLine) {
+            window.location.href = 'https://g14n.info'
+          }
+        })
       })
     </script>
   </body>
