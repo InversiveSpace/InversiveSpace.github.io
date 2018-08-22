@@ -43,7 +43,7 @@
       }
 
       section header {
-        height: 90%;
+        height: 53%;
         width: 100%;
         display: flex;
         align-items: center;
@@ -52,6 +52,15 @@
 
       section header h1 {
         font-size: 10.17vmin;
+          margin-top: auto;
+      }
+
+      section .icons {
+        height: calc(100% - 10% - 53%);
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       section footer {
@@ -68,17 +77,16 @@
 
       a {
         color: silver;
-        tedt-decoration: none;
       }
 
       a:hover {
         background-color: black;
       }
-      
+
       .hidden { display: none; }
 
       .icon svg {
-        width: 25px;
+        width: 7.1vh;
       }
     </style>
   </head>
@@ -87,15 +95,20 @@
       <header>
         <h1>Inversive Space</h1>
       </header>
+
+      <div class="icons">
+        <span class="icon">
+            <svg id="install" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+              <path fill="currentColor" d="M504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zM212 140v116h-70.9c-10.7 0-16.1 13-8.5 20.5l114.9 114.3c4.7 4.7 12.2 4.7 16.9 0l114.9-114.3c7.6-7.6 2.2-20.5-8.5-20.5H300V140c0-6.6-5.4-12-12-12h-64c-6.6 0-12 5.4-12 12z">
+                <animate attributeName="fill" values="silver;black;silver" dur="7.1s" repeatCount="indefinite" />
+              </path>
+            </svg>
+        </span>
+      </div>
+
       <footer>
         <p>
-          <a href="https://g14n.info">Gianluca Casati</a>&nbsp;&middot;&nbsp;P. IVA 02551170992 
-
-          <span class="icon">
-            <svg id="install" class="hidden" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-              <path fill="currentColor" d="M504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zM212 140v116h-70.9c-10.7 0-16.1 13-8.5 20.5l114.9 114.3c4.7 4.7 12.2 4.7 16.9 0l114.9-114.3c7.6-7.6 2.2-20.5-8.5-20.5H300V140c0-6.6-5.4-12-12-12h-64c-6.6 0-12 5.4-12 12z"></path>
-            </svg>
-          </span>
+          di <a href="https://g14n.info">Gianluca Casati</a>&nbsp;&middot;&nbsp;P.IVA 02551170992
         </p>
       </footer>
     </section>
@@ -113,14 +126,14 @@
         event.preventDefault()
 
         deferredInstall = event
-        
+
         var installButton = document.getElementById('install')
         installButton.classList.remove('hidden')
 
         installButton.addEventListener('click', function () {
           if (deferredInstall) {
             deferredInstall.prompt()
-            
+
             deferredInstall.userChoice.then(function (choiceResult) {
               if (choiceResult.outcome === 'accepted') {
                 console.log('User accepted')
@@ -133,7 +146,7 @@
           }
         })
       })
-      
+
       window.addEventListener('appinstalled', function (event) {
         console.log('installed')
       })
