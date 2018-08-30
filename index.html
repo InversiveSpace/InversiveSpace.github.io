@@ -48,6 +48,16 @@
         background-color: #333333;
       }
 
+      .wrapper {
+        position: relative;
+        height: 100%;
+        width: 100%;
+      }
+
+      .content {
+        position: relative;
+      }
+
       section header {
         height: 53%;
         width: 100%;
@@ -96,6 +106,19 @@
         transition: background-color 1.77s ease, border-color 1.77s ease, border-bottom-color linear 0.17s;
       }
 
+      svg.background {
+        background-color: transparent;
+        position: absolute;
+        top:0;
+        left; 0;
+        height: 100%;
+        width: 100%;
+      }
+
+      circle {
+        fill: #444;
+      }
+
       .hidden { display: none; }
 
       .icon svg {
@@ -105,25 +128,35 @@
   </head>
   <body>
     <section>
-      <header>
-        <h1>Inversive Space</h1>
-      </header>
+      <div class="wrapper">
+        <svg class="background">
+          <circle cx="71" cy="127" r="28"></circle>
+          <circle cx="120" cy="80" r="40"></circle>
+          <circle cx="134" cy="164" r="45"></circle>
+        </svg>
 
-      <div class="icons">
-        <span class="icon">
-            <svg id="install" class="hidden" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-              <path fill="currentColor" d="M504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zM212 140v116h-70.9c-10.7 0-16.1 13-8.5 20.5l114.9 114.3c4.7 4.7 12.2 4.7 16.9 0l114.9-114.3c7.6-7.6 2.2-20.5-8.5-20.5H300V140c0-6.6-5.4-12-12-12h-64c-6.6 0-12 5.4-12 12z">
-                <animate attributeName="fill" values="silver;black;silver" dur="7.1s" repeatCount="indefinite" />
-              </path>
-            </svg>
-        </span>
+        <div class="content">
+          <header>
+            <h1>Inversive Space</h1>
+          </header>
+
+          <div class="icons">
+            <span class="icon">
+                <svg id="install" class="hidden" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                  <path fill="currentColor" d="M504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zM212 140v116h-70.9c-10.7 0-16.1 13-8.5 20.5l114.9 114.3c4.7 4.7 12.2 4.7 16.9 0l114.9-114.3c7.6-7.6 2.2-20.5-8.5-20.5H300V140c0-6.6-5.4-12-12-12h-64c-6.6 0-12 5.4-12 12z">
+                    <animate attributeName="fill" values="silver;black;silver" dur="7.1s" repeatCount="indefinite" />
+                  </path>
+                </svg>
+            </span>
+          </div>
+
+          <footer>
+            <p>
+              di <a id="mywebsite">Gianluca Casati</a>&nbsp;&middot;&nbsp;P.IVA 02551170992
+            </p>
+          </footer>
+        </div>
       </div>
-
-      <footer>
-        <p>
-          di <a id="mywebsite">Gianluca Casati</a>&nbsp;&middot;&nbsp;P.IVA 02551170992
-        </p>
-      </footer>
     </section>
 
     <script>
