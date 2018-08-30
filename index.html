@@ -82,9 +82,18 @@
       }
 
       a {
-        background-color: black;
-        color: silver;
         text-decoration: none;
+        background-color: #444;
+        border: 3px solid #444;
+        border-bottom-color: #555;
+        cursor: pointer;
+        transition: all 0.71s;
+      }
+
+      a:hover {
+        border-color: black;
+        background-color: black;
+        transition: background-color 1.77s ease, border-color 1.77s ease, border-bottom-color linear 0.17s;
       }
 
       .hidden { display: none; }
