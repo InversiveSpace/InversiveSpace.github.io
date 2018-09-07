@@ -1,6 +1,6 @@
 const CACHE_NAME = 'inversive.space-v1.0'
 
-const CACHED_URLS = [
+const REQUIRED_FILES = [
   '/',
   '/animation.js',
   '/cache.js',
@@ -17,19 +17,37 @@ const CACHED_URLS = [
   '/media/logo/512x512.png'
 ]
 
+const showError = error => {
+  console.error(error)
+}
+
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(
-      cache => cache.addAll(CACHED_URLS)
-    ).catch(error => { console.error(error) })
+      cache => cache.addAll(REQUIRED_FILES)
+    ).catch(showError)
   )
 })
 
-// Cache falling back to the network.
+function cached (request) {
+  return caches.open(CACHE_NAME).then(cache => {
+    return cache.match(request).then(matching => {
+      return matching || Promise.reject(new Error(`no match for ${request.url}`))
+    }).catch(showError)
+  }).catch(showError)
+}
+
+function updated (request) {
+  return caches.open(CACHE).then(cache => {
+    return fetch(request).then(response => {
+      return cache.put(request, response)
+    }).catch(showError)
+  }).catch(showError)
+}
+
+// Cache and update.
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(
-      response => response || fetch(event.request)
-    ).catch(error => { console.error(error) })
-  )
+  event.respondWith(cached(event.request))
+
+  event.waitUntil(updated(event.request))
 })
