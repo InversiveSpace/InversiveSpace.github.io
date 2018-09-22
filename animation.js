@@ -33,6 +33,43 @@ function normalize (vector) {
   }
 }
 
+function invert (inversionCircle, inputCircle) {
+  // Draw a line that pass through the centers of inversionCircle and inputCircle.
+  // Get the points of inputCircle that intersect the line, say them `a` and `b`.
+
+  const vector = normalize({ x: inputCircle.x - inversionCircle.x, y: inputCircle.y - inversionCircle.y })
+
+  const a = {
+    x: inputCircle.x + inputCircle.r + vector.x,
+    y: inputCircle.y + inputCircle.r + vector.y
+  }
+
+  const b = {
+    x: inputCircle.x - inputCircle.r + vector.x,
+    y: inputCircle.y - inputCircle.r + vector.y
+  }
+
+  // Compute distances from inversionCircle center then invert them.
+  const distanceA = distance(inversionCircle, a)
+  const distanceB = distance(inversionCircle, b)
+
+  const invertedDistanceA = inputCircle.r * inputCircle.r / distanceA
+  const invertedDistanceB = inputCircle.r * inputCircle.r / distanceB
+  console.log(invertedDistanceA, invertedDistanceB)
+
+  // Now we can calculate the ray and its distance from inversionCircle.
+  const r = Math.abs(invertedDistanceB - invertedDistanceA) / 2
+  const distanceC = Math.min(distanceA, distanceB) + r
+
+  const outputCircle = {
+    x: inversionCircle.x + distanceC * vector.x,
+    y: inversionCircle.y + distanceC * vector.y,
+    r
+  }
+
+  return outputCircle
+}
+
 const circle1 = {
   x: 100 + Math.floor(Math.random() * 100),
   y: 100 + Math.floor(Math.random() * 100),
@@ -72,10 +109,18 @@ const tangentPoint = {
 const minR = Math.min(circle1.r, circle2.r)
 
 const invertedCircle3 = {
-  x: tangentPoint.x - minR * vector.y,
-  y: tangentPoint.y + minR * vector.x,
+  x: tangentPoint.x - vector.y * minR / 2,
+  y: tangentPoint.y + vector.x * minR / 2,
   r: minR / 2
 }
+
+const inversionCircle = {
+  x: tangentPoint.x,
+  y: tangentPoint.y,
+  r: minR
+}
+
+// const circle3 = invert(inversionCircle, invertedCircle3)
 
 const timeline = [
   {
@@ -90,7 +135,12 @@ const timeline = [
   },
   {
     type: 'CREATE_CIRCLE',
-    begin: 2,
+    begin: 3,
+    circle: inversionCircle
+  },
+  {
+    type: 'CREATE_CIRCLE',
+    begin: 3,
     circle: invertedCircle3
   }
 ]
