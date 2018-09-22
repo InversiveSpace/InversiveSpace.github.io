@@ -21,19 +21,60 @@ const initialState = {
 }
 
 function distance (a, b) {
-  console.log(a, b)
-  return Math.round(Math.sqrt((a.cx - b.cx) * (a.cx - b.cx) + (a.cy - b.cy) * (a.cy - b.cy)))
+  return Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y))
+}
+
+function normalize (vector) {
+  const norm = distance(vector, { x : 0, y: 0 })
+
+  return {
+    x: vector.x / norm,
+    y: vector.y / norm
+  }
 }
 
 const circle1 = {
-  cx: 100 + Math.floor(Math.random() * 100),
-  cy: 100 + Math.floor(Math.random() * 100),
+  x: 100 + Math.floor(Math.random() * 100),
+  y: 100 + Math.floor(Math.random() * 100),
   r: 50 + Math.floor(Math.random() * 40)
 }
 
 const circle2 = {
-  cx: 250 + Math.floor(Math.random() * 100),
-  cy: 250 + Math.floor(Math.random() * 100)
+  x: 250 + Math.floor(Math.random() * 100),
+  y: 250 + Math.floor(Math.random() * 100)
+}
+
+circle2.r = distance(circle1, circle2) - circle1.r
+
+// This vector goes from center of circle1 to center of circle2.
+const vector = normalize({ x: circle2.x - circle1.x, y: circle2.y - circle1.y })
+
+// This is the tangent point of circle1 and circle2.
+const tangentPoint = {
+  x: circle1.x + circle1.r * vector.x,
+  y: circle1.y + circle1.r * vector.y
+}
+
+// Draw a circle centered at the `tangentPoint` and with radius equal the
+// minimum radius among circle1 and circle2. Draw the two parallel lines that
+// pass through the intersection of this circle and circles 1 and 2.
+//
+// Those two parallel lines are the image circle1 and circle2 if we invert
+// respect of the circle we draw. Any circle inscribed in that strip is the
+// image, respect of the inversion above, of a circle3 tangent to circle1 and circle2.
+//
+// To get a center of such a circle we can move perpendicular to vector.
+//
+// It is used the minimum radius to avoid tangent circle3 containing circle1 and circle2.
+//
+// Note that the inversion circle forms a Vesciva Piscis with one of the first two circles created.
+
+const minR = Math.min(circle1.r, circle2.r)
+
+const invertedCircle3 = {
+  x: tangentPoint.x - minR * vector.y,
+  y: tangentPoint.y + minR * vector.x,
+  r: minR / 2
 }
 
 const timeline = [
@@ -45,7 +86,12 @@ const timeline = [
   {
     type: 'CREATE_CIRCLE',
     begin: 2,
-    circle: Object.assign(circle2, { r: distance(circle1, circle2) - circle1.r })
+    circle: circle2
+  },
+  {
+    type: 'CREATE_CIRCLE',
+    begin: 2,
+    circle: invertedCircle3
   }
 ]
 
@@ -66,21 +112,21 @@ class Circle extends Component {
   render (state, dispatch) {
     const { container } = this
 
-    const { begin, r, cx, cy } = state
+    const { begin, r, x, y } = state
 
     if (r !== this.r) {
       this.r = r
       container.innerHTML = `<animate attributeName="r" from="0" to="${r}" begin="${begin}s" dur="1s" fill="freeze" />`
     }
 
-    if (cx !== this.cx) {
-      this.cx = cx
-      container.setAttribute('cx', cx)
+    if (x !== this.x) {
+      this.x = x
+      container.setAttribute('cx', x)
     }
 
-    if (cy !== this.cy) {
-      this.cy = cy
-      container.setAttribute('cy', cy)
+    if (y !== this.y) {
+      this.y = y
+      container.setAttribute('cy', y)
     }
   }
 }
