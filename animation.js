@@ -15,29 +15,39 @@
 // tre fu il fischio della voce. _/
 /////////////////////////////////
 
-const a = document.querySelector('circle#a')
-const b = document.querySelector('circle#b')
-const c = document.querySelector('circle#c')
-
 const initialState = {
-  circles: [
-    {
-      id: 'a',
-      x: a.getAttribute('cx'),
-      y: a.getAttribute('cy')
-    },
-    {
-      id: 'b',
-      x: b.getAttribute('cx'),
-      y: b.getAttribute('cy')
-    },
-    {
-      id: 'c',
-      x: c.getAttribute('cx'),
-      y: c.getAttribute('cy')
-    }
-  ]
+  nextId: 0,
+  circle: {}
 }
+
+function distance (a, b) {
+  console.log(a, b)
+  return Math.round(Math.sqrt((a.cx - b.cx) * (a.cx - b.cx) + (a.cy - b.cy) * (a.cy - b.cy)))
+}
+
+const circle1 = {
+  cx: 100 + Math.floor(Math.random() * 100),
+  cy: 100 + Math.floor(Math.random() * 100),
+  r: 50 + Math.floor(Math.random() * 40)
+}
+
+const circle2 = {
+  cx: 250 + Math.floor(Math.random() * 100),
+  cy: 250 + Math.floor(Math.random() * 100)
+}
+
+const timeline = [
+  {
+    type: 'CREATE_CIRCLE',
+    begin: 1,
+    circle: circle1
+  },
+  {
+    type: 'CREATE_CIRCLE',
+    begin: 2,
+    circle: Object.assign(circle2, { r: distance(circle1, circle2) - circle1.r })
+  }
+]
 
 class Component {
   constructor (container, dispatch) {
@@ -49,65 +59,57 @@ class Component {
 }
 
 class Circle extends Component {
-  distanceFrom (p) {
-    const c = this.getCenter()
-
-    return Math.round(Math.sqrt((p.x - c.x) * (p.x - c.x) + (p.y - c.y) * (p.y - c.y)))
-  }
-
-  getCenter () {
-    return {
-      x: parseInt(this.container.getAttribute('cx')),
-      y: parseInt(this.container.getAttribute('cy'))
-    }
-  }
-
-  getRay () {
-    return parseInt(this.container.getAttribute('r'))
+  constructor (container, dispatch) {
+    super(container, dispatch)
   }
 
   render (state, dispatch) {
-    const {
-      animate,
-      container
-    } = this
+    const { container } = this
 
-    const id = this.container.id
+    const { begin, r, cx, cy } = state
 
-    let firstOtherCircleFound
+    if (r !== this.r) {
+      this.r = r
+      container.innerHTML = `<animate attributeName="r" from="0" to="${r}" begin="${begin}s" dur="1s" fill="freeze" />`
+    }
 
-    state.circles.forEach((circle) => {
-      if (id !== circle.id) {
-        if (firstOtherCircleFound) return
+    if (cx !== this.cx) {
+      this.cx = cx
+      container.setAttribute('cx', cx)
+    }
 
-        firstOtherCircleFound = circle
-      }
-    })
-
-    let currentRay = this.getRay()
-
-    const desiredRay = Math.round(this.distanceFrom(firstOtherCircleFound) / 2)
-
-    if (desiredRay !== currentRay) {
-      this.container.innerHTML='<animate attributeName="r" from="0" to="32" dur="2s" fill="freeze" />'
+    if (cy !== this.cy) {
+      this.cy = cy
+      container.setAttribute('cy', cy)
     }
   }
 }
 
 class Root extends Component {
-  constructor (container, dispatch) {
-    super(container, dispatch)
+  createCircle (circle) {
+    const { id } = circle
 
-    this.component.a = new Circle(a, dispatch)
-    this.component.b = new Circle(b, dispatch)
-    this.component.c = new Circle(c, dispatch)
+    const element = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
+    element.setAttribute('id', id)
+    this.container.appendChild(element)
+
+    const component = new Circle(element, this.dispatch)
+
+    component.render(circle)
+
+    this.component[id] = component
   }
 
   render (state, dispatch) {
-    const { component } = this
+    Object.keys(state.circle).forEach(id => {
+      const component = this.component[id]
+      const circle = state.circle[id]
 
-    Object.keys(component).forEach(key => {
-      component[key].render(state, dispatch)
+      if (component) {
+        component.render(circle)
+      } else {
+        this.createCircle(circle)
+      }
     })
   }
 }
@@ -116,12 +118,14 @@ function reducer (previousState, action) {
   const state = Object.assign({}, previousState)
 
   switch (action.type) {
-    case 'EXPAND_CIRCLE':
-      state.circles.forEach((circle, index) => {
-        if (circle.id === action.id) {
-          state.circles[index].r = action.r
-        }
-      })
+    case 'CREATE_CIRCLE':
+      const  nextId = state.nextId + 1
+      state.circle[nextId] = Object.assign({ id: nextId }, { begin: action.begin }, action.circle)
+      state.nextId = nextId
+
+      break
+
+    case 'INVERT':
 
       break
   }
@@ -138,13 +142,16 @@ function app (state) {
       render(state, dispatch)
     }
 
-    const root = new Root(document.querySelector('svg#background'), dispatch)
+    const root = new Root(document.querySelector('svg.background'), dispatch)
 
     render = root.render.bind(root)
 
-    dispatch({ type: 'INIT' })
+    timeline.forEach(action => {
+      setTimeout(() => {
+        dispatch(action)
+      }, action.begin * 1000)
+    })
   }
-
 }
 
 window.addEventListener('load', app(initialState))
