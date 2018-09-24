@@ -40,13 +40,13 @@ function invert (inversionCircle, inputCircle) {
   const vector = normalize({ x: inputCircle.x - inversionCircle.x, y: inputCircle.y - inversionCircle.y })
 
   const a = {
-    x: inputCircle.x + inputCircle.r + vector.x,
-    y: inputCircle.y + inputCircle.r + vector.y
+    x: inputCircle.x + inputCircle.r * vector.x,
+    y: inputCircle.y + inputCircle.r * vector.y
   }
 
   const b = {
-    x: inputCircle.x - inputCircle.r + vector.x,
-    y: inputCircle.y - inputCircle.r + vector.y
+    x: inputCircle.x - inputCircle.r * vector.x,
+    y: inputCircle.y - inputCircle.r * vector.y
   }
 
   // Compute distances from inversionCircle center then invert them.
@@ -55,9 +55,8 @@ function invert (inversionCircle, inputCircle) {
 
   const invertedDistanceA = inputCircle.r * inputCircle.r / distanceA
   const invertedDistanceB = inputCircle.r * inputCircle.r / distanceB
-  console.log(invertedDistanceA, invertedDistanceB)
 
-  // Now we can calculate the ray and its distance from inversionCircle.
+  // Now it can be calculated the ray and its distance from inversionCircle.
   const r = Math.abs(invertedDistanceB - invertedDistanceA) / 2
   const distanceC = Math.min(distanceA, distanceB) + r
 
@@ -73,7 +72,7 @@ function invert (inversionCircle, inputCircle) {
 const circle1 = {
   x: 100 + Math.floor(Math.random() * 100),
   y: 100 + Math.floor(Math.random() * 100),
-  r: 50 + Math.floor(Math.random() * 40)
+  r: 50  + Math.floor(Math.random() * 40)
 }
 
 const circle2 = {
@@ -104,14 +103,39 @@ const tangentPoint = {
 //
 // It is used the minimum radius to avoid tangent circle3 containing circle1 and circle2.
 //
-// Note that the inversion circle forms a Vesciva Piscis with one of the first two circles created.
+// Note that the inversion circle forms a Vescica Piscis with one of the first two circles created.
+
+// Given a circle with ray R adnd a circle with center on its circumference and with ray r,
+// consider the triangle that joins the centers and one of the tangent points.
+// As usual, consider R >= r.
+// Draw the segment that joins the tangent points.
+// The distance of that segment to the center of the smaller circle is x.
+// Since there is an isosceles triangle, after drawing its minor height which cut
+// the side R on x, using Pitagora's theorem it result that
+//
+//     R^2 - (R - x)^2 = r^2 - x^2
+//
+// which implies that
+//
+//     x = r^2 / (2 * R)
+//
+// Note that when r = R, then x = r/2
+//
+// So the strip of parallel lines that are the image of the two circles inverted
+// on the circle that has center in their tangent points and ray equal to the
+// smallest circle, has height equal x plus r/2. A circle in that strip is the
+// image of a circle tanget to both given circles. Hence the ray of that inverted
+// circle is half of that strip, that is
+//
+//     (r^2/2R + r/2)/2 = r(1 + R)/4R
 
 const minR = Math.min(circle1.r, circle2.r)
+const maxR = Math.max(circle1.r, circle2.r)
 
 const invertedCircle3 = {
-  x: tangentPoint.x - vector.y * minR / 2,
-  y: tangentPoint.y + vector.x * minR / 2,
-  r: minR / 2
+  x: tangentPoint.x - vector.y * minR,
+  y: tangentPoint.y + vector.x * minR,
+  r: minR * (1 + maxR) / (4 * maxR)
 }
 
 const inversionCircle = {
@@ -120,7 +144,7 @@ const inversionCircle = {
   r: minR
 }
 
-// const circle3 = invert(inversionCircle, invertedCircle3)
+const circle3 = invert(inversionCircle, invertedCircle3)
 
 const timeline = [
   {
@@ -142,6 +166,11 @@ const timeline = [
     type: 'CREATE_CIRCLE',
     begin: 3,
     circle: invertedCircle3
+  },
+  {
+    type: 'CREATE_CIRCLE',
+    begin: 3,
+    circle: circle3
   }
 ]
 
