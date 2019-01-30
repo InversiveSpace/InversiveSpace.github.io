@@ -38,7 +38,7 @@ function cached (request) {
 }
 
 function updated (request) {
-  return caches.open(CACHE).then(cache => {
+  return caches.open(CACHE_NAME).then(cache => {
     return fetch(request).then(response => {
       return cache.put(request, response)
     }).catch(showError)
