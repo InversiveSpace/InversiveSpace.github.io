@@ -1,0 +1,14 @@
+<svg
+  version="1.1"
+  viewBox="0.0 0.0 512 512"
+  fill="none"
+  stroke="none"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <circle cx="107" cy="252" r="97" fill="#333333"></circle>
+  <circle cx="299" cy="371" r="129" fill="#333333"></circle>
+  <circle cx="279" cy="126" r="117" fill="#333333"></circle>
+  <circle cx="221" cy="247.1" r="17.1" fill="#c0c0c0"></circle>
+  <circle cx="221" cy="247.1" r="68" fill="#ffffff" fill-opacity="0.17"></circle>
+</svg>
